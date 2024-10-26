@@ -9,21 +9,8 @@ import java.nio.charset.StandardCharsets;
 
 public class RequestHandler implements HttpHandler {
 
-    private static final String header =
-            """
-                    HTTP/1.1 200 OK\r
-                    Content-Type: text/html\r
-                    Content-Length:\s""";
-
-    private static final String postfix = "\r\n \r\n";
-
     private static final String error404Message =
-            """
-                    HTTP/1.1 404 File Not Found\r
-                    Content-Type: text/html\r
-                    Content-Length: 23\r
-                    \r
-                    <h1>File Not Found</h1>""";
+            "<h1>File Not Found</h1>";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -32,23 +19,40 @@ public class RequestHandler implements HttpHandler {
 
         try {
 
-            String fileName = tpbsws.WEB_ROOT + exchange.getRequestURI();
-            FileReader fr = new FileReader(fileName);
-            BufferedReader bread = new BufferedReader(fr);
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = bread.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-            bread.close();
-            String outMsg = header + stringBuilder.length() + postfix + stringBuilder;
+            System.out.print(exchange.getRemoteAddress() + " requested resource at " + exchange.getRequestURI());
+
+            String outMsg = getStaticFileContent(exchange);
+
+            System.out.println(" - Found!\n");
 
             exchange.sendResponseHeaders(200, outMsg.length());
             exchange.getResponseBody().write(outMsg.getBytes(StandardCharsets.UTF_8));
             exchange.close();
 
         } catch (FileNotFoundException e) {
-            exchange.getResponseBody().write(error404Message.getBytes());
-        }
+            System.out.println(" - File Not Found.\n");
+            exchange.sendResponseHeaders(404, error404Message.length());
+            exchange.getResponseBody().write(error404Message.getBytes(StandardCharsets.UTF_8));
+            exchange.close();
         }
     }
+
+    // Returns content of file described in HTTP request
+    private static String getStaticFileContent(HttpExchange exchange) throws IOException {
+
+        String fileName = tpbsws.WEB_ROOT + exchange.getRequestURI();
+
+        FileReader fr = new FileReader(fileName);
+        BufferedReader bread = new BufferedReader(fr);
+
+        String line;
+        // Loads file into string
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = bread.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+
+        bread.close();
+        return stringBuilder.toString();
+    }
+}
