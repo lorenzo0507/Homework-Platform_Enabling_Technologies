@@ -12,6 +12,7 @@ public class tpbsc {
     // parameters
     static int port = 7654;     // Default = 7654
     static int poolSize = 2;    // Default = 2
+    public static Hashtable<String, HttpServlet> servletHashtable = new Hashtable<>();
 
     // CHANGE THIS TO THE FOLDER WHERE WEB DATA IS STORED
     public static final String DYNAMIC_ROOT = System.getProperty("user.dir") + "/servletrepository";
@@ -21,7 +22,6 @@ public class tpbsc {
     public static void main(String[] args) {
 
         HttpServer server = null;
-        Hashtable<String, HttpServlet> table = new Hashtable<>();
 
         // Executes received requests using a thread pool (up to poolSize tasks concurrently).
         ExecutorService pool = Executors.newFixedThreadPool(poolSize);
@@ -51,7 +51,6 @@ public class tpbsc {
 
             ManagementConsole console = new ManagementConsole();
             console.start();
-
 
 
         } catch (IOException e) {
