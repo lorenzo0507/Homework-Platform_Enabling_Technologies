@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class RequestHandler implements HttpHandler {
+public class StaticContentHandler implements HttpHandler {
 
     private static final String error404Message =
             "<h1>File Not Found</h1>";
