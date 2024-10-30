@@ -1,5 +1,6 @@
 import com.sun.net.httpserver.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +14,7 @@ public class tpbsws {
     static int poolSize = 2;    // Default = 2
 
     // CHANGE THIS TO THE FOLDER WHERE WEB DATA IS STORED
-    public static final String WEB_ROOT = System.getProperty("user.dir") + "/staticcontentrepository";
+    public static final String WEB_ROOT = System.getProperty("user.dir") + File.separator + "staticcontentrepository";
 
     private static final String SHUTDOWN_COMMAND = "/SHUTDOWN";
 

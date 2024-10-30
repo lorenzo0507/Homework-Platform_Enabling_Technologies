@@ -1,10 +1,35 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Objects;
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServlet;
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 public class ManagementConsole extends Thread {
+
+    ExecutorService services;
+    ManagementConsole(ExecutorService pool) {
+        services = pool;
+    }
+
+    void listServlets() {
+
+        // TODO listare quelli nella repo, non quelli caricati.
+
+        int nloaded = tpbsc.servletHashtable.size();
+        if(nloaded == 0) {
+            System.out.println("No servlets currently loaded. Try using the \"load <servlet>\" command.");
+            return;
+        }
+
+        System.out.print("Currently loaded servlets: (" + nloaded + ") - ");
+        for(Object key : tpbsc.servletHashtable.keySet()) {
+            System.out.print(key + "; ");
+        }
+        System.out.println();
+    }
 
     void loadServlet(String name) {
         // Check table for servlet
@@ -15,11 +40,43 @@ public class ManagementConsole extends Thread {
             return;
         }
 
-        File dir = new File(System.getProperty("user.dir") + File.separator + "servletcontainer" + File.separator);
+        // points to ./servletrepository/
+        String repopath = tpbsc.DYNAMIC_ROOT + File.separator;
 
-        File[] arr = dir.listFiles();
+        File servletDir = new File(repopath + name);
+        if(!servletDir.exists() || !servletDir.isDirectory()) {
+            System.out.println(name + " is not a Servlet Directory.");
+            return;
+        }
 
-        // find servlet in repository, check metadata.txt for class name and load it.
+        try(FileReader fr = new FileReader(servletDir + File.separator + "metadata.txt")) {
+
+            BufferedReader br = new BufferedReader(fr);
+
+            String line;
+            while (( line = br.readLine()) != null ) {
+
+                if (line.contains("ServletClassName")) {
+                    String[] words = line.split("=");
+                    String servletName = words[1];
+
+                    URL[] url = {new File(servletDir + File.separator + "class" + File.separator).toURI().toURL()};
+
+                    URLClassLoader loader = new URLClassLoader(url);
+                    Class<?> servletClass = loader.loadClass(servletName);
+
+                    tpbsc.servletHashtable.put(servletName,
+                            (HttpServlet) servletClass.getDeclaredConstructor().newInstance());
+
+                    loader.close();
+                    System.out.println(servletName + " loaded successfully.");
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error loading servlet " + name + " : " + e.getMessage());
+            e.printStackTrace();
+        }
 
     }
 
@@ -30,9 +87,8 @@ public class ManagementConsole extends Thread {
             return;
         }
 
-        // TODO Actually unload the servlet class
-
         tpbsc.servletHashtable.remove(name);
+        System.out.println(name + " unloaded successfully.");
     }
 
 
@@ -42,11 +98,23 @@ public class ManagementConsole extends Thread {
         String[] words = cmd.split(" ");
 
         switch (words[0]) {
-            case "load" : // loadServlet(words[1]);
-            case "unload" : // unloadServlet(words[1]);
+            case "load" : {
+                loadServlet(words[1]);
+                return;
+            }
+            case "unload" : {
+                unloadServlet(words[1]);
+                return;
+            }
+
+            case "list" : {
+                listServlets();
+                return;
+            }
+
             case "quit" : return;
 
-            default: System.out.println("Unknown command: " + cmd + "\nSupported commands are: load <servlet>, unload <servlet>, quit");
+            default: System.out.println("Unknown command: " + cmd + "\nSupported commands are: load <servlet>, unload <servlet>, list, quit");
         }
 
     }
@@ -66,8 +134,9 @@ public class ManagementConsole extends Thread {
                 e.printStackTrace();
             }
 
-        } while (!command.equals("quit"));
+        } while (command != null && !command.equals("quit"));
 
+        services.shutdown();
     }
 
 }

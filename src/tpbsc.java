@@ -1,6 +1,7 @@
 import com.sun.net.httpserver.HttpServer;
 
 import javax.servlet.http.HttpServlet;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Hashtable;
@@ -14,8 +15,8 @@ public class tpbsc {
     static int poolSize = 2;    // Default = 2
     public static Hashtable<String, HttpServlet> servletHashtable = new Hashtable<>();
 
-    // CHANGE THIS TO THE FOLDER WHERE WEB DATA IS STORED
-    public static final String DYNAMIC_ROOT = System.getProperty("user.dir") + "/servletrepository";
+    // TODO CHANGE THIS TO THE FOLDER WHERE WEB DATA IS STORED
+    public static String DYNAMIC_ROOT = System.getProperty("user.dir") + File.separator + "src" + File.separator + "servletrepository";;
 
     private static final String SHUTDOWN_COMMAND = "/SHUTDOWN";
 
@@ -49,7 +50,7 @@ public class tpbsc {
 
             // Also, start the management console
 
-            ManagementConsole console = new ManagementConsole();
+            ManagementConsole console = new ManagementConsole(pool);
             console.start();
 
 
