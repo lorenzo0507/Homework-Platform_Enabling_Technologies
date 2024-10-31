@@ -40,7 +40,7 @@ public class StaticContentHandler implements HttpHandler {
     // Returns content of file described in HTTP request
     private static String getStaticFileContent(HttpExchange exchange) throws IOException {
 
-        String fileName = tpbsws.WEB_ROOT + exchange.getRequestURI();
+        String fileName = tpbsc.STATIC_ROOT + exchange.getRequestURI();
 
         FileReader fr = new FileReader(fileName);
         BufferedReader bread = new BufferedReader(fr);

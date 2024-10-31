@@ -15,8 +15,9 @@ public class tpbsc {
     static int poolSize = 2;    // Default = 2
     public static Hashtable<String, HttpServlet> servletHashtable = new Hashtable<>();
 
-    // TODO CHANGE THIS TO THE FOLDER WHERE WEB DATA IS STORED
-    public static String DYNAMIC_ROOT = System.getProperty("user.dir") + File.separator + "src" + File.separator + "servletrepository";;
+    // TODO CHANGE THESE TO THE FOLDER WHERE WEB DATA IS STORED
+    public static String STATIC_ROOT = System.getProperty("user.dir") + File.separator + "staticcontentrepository";
+    public static String DYNAMIC_ROOT = System.getProperty("user.dir") + File.separator + "src" + File.separator + "servletrepository";
 
     private static final String SHUTDOWN_COMMAND = "/SHUTDOWN";
 
