@@ -9,8 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 public class StaticContentHandler implements HttpHandler {
 
-    private static final String error404Message =
-            "<h1>File Not Found</h1>";
+    private static final String error404Message = "<h1>File Not Found</h1>";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -25,8 +24,9 @@ public class StaticContentHandler implements HttpHandler {
 
             System.out.println(" - Found!\n");
 
-            exchange.sendResponseHeaders(200, outMsg.length());
+            exchange.sendResponseHeaders(200, 0);
             exchange.getResponseBody().write(outMsg.getBytes(StandardCharsets.UTF_8));
+
             exchange.close();
 
         } catch (FileNotFoundException e) {
@@ -40,7 +40,7 @@ public class StaticContentHandler implements HttpHandler {
     // Returns content of file described in HTTP request
     private static String getStaticFileContent(HttpExchange exchange) throws IOException {
 
-        String fileName = tpbsc.STATIC_ROOT + exchange.getRequestURI();
+        String fileName = tpbsca.STATIC_ROOT + exchange.getRequestURI();
 
         FileReader fr = new FileReader(fileName);
         BufferedReader bread = new BufferedReader(fr);

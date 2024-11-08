@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="tbpsc:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/tbpsc_jar</output-path>
-    <root id="archive" name="Homework - Platform Enabling Technologies.jar">
-      <element id="module-output" name="Homework - Platform Enabling Technologies" />
-    </root>
-  </artifact>
-</component>

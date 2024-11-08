@@ -3,8 +3,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 public class ServletRequestHandler implements HttpHandler {
 
@@ -24,9 +22,9 @@ public class ServletRequestHandler implements HttpHandler {
         String[] splitUri = exchange.getRequestURI().toString().split("/");
         String servletName = splitUri[splitUri.length - 1];
 
-        if (tpbsc.servletHashtable.containsKey(servletName)) {
+        if (tpbsca.servletHashtable.containsKey(servletName)) {
             try {
-                HttpServlet servlet = tpbsc.servletHashtable.get(servletName);
+                HttpServlet servlet = tpbsca.servletHashtable.get(servletName);
 
                 MyRequestImpl request = new MyRequestImpl(exchange);
                 MyResponseImpl response = new MyResponseImpl(exchange);
@@ -36,7 +34,11 @@ public class ServletRequestHandler implements HttpHandler {
 
             }
             catch (Exception e) {
+                System.out.println("There was an error while trying to handle request.");
+
+                //noinspection CallToPrintStackTrace
                 e.printStackTrace();
+
             }
         }
         else {

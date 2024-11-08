@@ -1,1 +1,1 @@
-ServletClassName=myservlet
+ServletClassName=External

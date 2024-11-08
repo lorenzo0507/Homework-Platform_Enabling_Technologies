@@ -8,17 +8,17 @@ import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class tpbsc {
+public class tpbsca {
 
     // parameters
-    static int port = 7654;     // Default = 7654
-    static int poolSize = 2;    // Default = 2
-    public static Hashtable<String, HttpServlet> servletHashtable = new Hashtable<>();
+    static final int port = 7654;     // Default = 7654
+    static final int poolSize = 2;    // Default = 2
+    public static final Hashtable<String, HttpServlet> servletHashtable = new Hashtable<>();
 
-    // TODO CHANGE THESE TO THE FOLDER WHERE WEB DATA IS STORED
-    public static String STATIC_ROOT = System.getProperty("user.dir") + File.separator + "staticcontentrepository";
-    public static String DYNAMIC_ROOT = System.getProperty("user.dir") + File.separator + "src" + File.separator + "servletrepository";
+    public static final String STATIC_ROOT = System.getProperty("user.dir") + File.separator + "staticcontentrepository";
+    public static final String DYNAMIC_ROOT = System.getProperty("user.dir") + File.separator + "servletrepository";
 
+    // Receiving an HTTP request that matches this will shut the server down.
     private static final String SHUTDOWN_COMMAND = "/SHUTDOWN";
 
     public static void main(String[] args) {
@@ -47,7 +47,11 @@ public class tpbsc {
             // It will listen to incoming connections, assign each request a task (a RequestHandler object)
             // and give it to the Executor Service, which will manage it according to its policy.
             server.start();
-            System.out.println("Thread Pool-Based Servlet Container started successfully and listening on port " + port + "!");
+            System.out.println("Thread Pool-Based Servlet Container (with Annotation support)" +
+                    " started successfully and listening on port " + port + "!");
+
+            System.out.println("Static webserver root: " + STATIC_ROOT);
+            System.out.println("Dynamic webserver root: " + DYNAMIC_ROOT);
 
             // Also, start the management console
 
@@ -57,12 +61,14 @@ public class tpbsc {
 
         } catch (IOException e) {
             System.out.println("IOException while configuring server. Program will now exit.");
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
             System.exit(-1);
         }
 
+        //noinspection StatementWithEmptyBody
         while (!pool.isShutdown()) {
-            // Idling until (the pool's) shutdown
+            // Idling until the pool is shutdown from either console or a /SHUTDOWN request.
         }
 
         // After shutdown, all existing tasks have 1 second to finish.

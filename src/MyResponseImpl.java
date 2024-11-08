@@ -1,5 +1,4 @@
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpsExchange;
 
 import java.io.*;
 import java.util.Collection;
@@ -10,10 +9,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 public class MyResponseImpl implements HttpServletResponse {
-	private static final int BUFFER_SIZE = 1024;
-	HttpExchange exchange;
-	OutputStream output;
-	PrintWriter writer;
+    final HttpExchange exchange;
+	final OutputStream output;
+	final PrintWriter writer;
 	private boolean responseSent = false;
 
 	public MyResponseImpl(HttpExchange ex) {
@@ -23,7 +21,7 @@ public class MyResponseImpl implements HttpServletResponse {
 	}
 
 	/** implementation of ServletResponse */
-	public void flushBuffer() throws IOException { }
+	public void flushBuffer() { }
 	public int getBufferSize() {
 		return 0;
 	}
@@ -58,7 +56,7 @@ public class MyResponseImpl implements HttpServletResponse {
 		};
 	}
 
-	public PrintWriter getWriter() throws IOException {
+	public PrintWriter getWriter() {
 		// autoflush is true, println() will flush,
 		// but print() will not.
 		return writer;
@@ -123,17 +121,17 @@ public class MyResponseImpl implements HttpServletResponse {
 		return null;
 	}
 	@Override
-	public void sendError(int sc, String msg) throws IOException {
+	public void sendError(int sc, String msg) {
 		// TODO Auto-generated method stub
 		
 	}
 	@Override
-	public void sendError(int sc) throws IOException {
+	public void sendError(int sc) {
 		// TODO Auto-generated method stub
 		
 	}
 	@Override
-	public void sendRedirect(String location) throws IOException {
+	public void sendRedirect(String location) {
 		// TODO Auto-generated method stub
 		
 	}

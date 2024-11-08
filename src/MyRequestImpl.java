@@ -17,14 +17,12 @@ import javax.servlet.http.Part;
 
 public class MyRequestImpl implements HttpServletRequest {
 	private final InputStream input;
-	public HttpExchange exchange;
-	private final BufferedReader breader;
+	public final HttpExchange exchange;
 
-	public MyRequestImpl(HttpExchange ex) {
+    public MyRequestImpl(HttpExchange ex) {
 		this.exchange = ex;
 		this.input = ex.getRequestBody();
-		breader = new BufferedReader(new InputStreamReader(input));
-	}
+    }
 
 
 
@@ -52,7 +50,7 @@ public class MyRequestImpl implements HttpServletRequest {
 	public String getContentType(){
 		return null;
 	}
-	public ServletInputStream getInputStream() throws IOException {
+	public ServletInputStream getInputStream() {
 		return new ServletInputStream() {
 
 			@Override
@@ -106,7 +104,7 @@ public class MyRequestImpl implements HttpServletRequest {
 		return null;
 	}
 
-	public BufferedReader getReader() throws IOException {
+	public BufferedReader getReader() {
 		return new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
 	}
 
@@ -128,8 +126,7 @@ public class MyRequestImpl implements HttpServletRequest {
 
 	public void removeAttribute(String attribute) { }
 	public void setAttribute(String key, Object value) { }
-	public void setCharacterEncoding(String encoding)
-	throws UnsupportedEncodingException { }
+	public void setCharacterEncoding(String encoding) { }
 	@Override
 	public long getContentLengthLong() {
 		// TODO Auto-generated method stub
@@ -319,33 +316,32 @@ public class MyRequestImpl implements HttpServletRequest {
 		return false;
 	}
 	@Override
-	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
+	public boolean authenticate(HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 	@Override
-	public void login(String username, String password) throws ServletException {
+	public void login(String username, String password) {
 		// TODO Auto-generated method stub
 		
 	}
 	@Override
-	public void logout() throws ServletException {
+	public void logout() {
 		// TODO Auto-generated method stub
 		
 	}
 	@Override
-	public Collection<Part> getParts() throws IOException, ServletException {
+	public Collection<Part> getParts() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public Part getPart(String name) throws IOException, ServletException {
+	public Part getPart(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public <T extends HttpUpgradeHandler> T upgrade(Class<T> httpUpgradeHandlerClass)
-			throws IOException, ServletException {
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> httpUpgradeHandlerClass) {
 		// TODO Auto-generated method stub
 		return null;
 	}
